@@ -21,7 +21,7 @@ function App() {
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
 
- const backendUrl = "https://ai-content-summarizer-lsx8.onrender.com/api";
+ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const copySummary = () => {
     navigator.clipboard.writeText(summary);
