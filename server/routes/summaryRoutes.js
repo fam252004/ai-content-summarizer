@@ -13,10 +13,12 @@ const upload = multer({
 
 async function generateSummary(text) {
   try {
-    const shortText = text.slice(0, 2000);
+
+    // limit text length
+    const shortText = text.slice(0, 1500);
 
     const response = await axios.post(
-      "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn",
+      "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
       {
         inputs: shortText,
       },
@@ -28,8 +30,17 @@ async function generateSummary(text) {
       }
     );
 
+    console.log(response.data);
+
+    // if model still loading
+    if (response.data.error) {
+      return response.data.error;
+    }
+
     return response.data[0].summary_text;
+
   } catch (error) {
+
     console.log(
       error.response?.data || error.message
     );
@@ -38,10 +49,14 @@ async function generateSummary(text) {
   }
 }
 
+// ================= TEXT SUMMARY =================
+
 router.post(
   "/text-summary",
   async (req, res) => {
+
     try {
+
       const { text } = req.body;
 
       if (!text) {
@@ -56,6 +71,7 @@ router.post(
       res.json({ summary });
 
     } catch (error) {
+
       console.log(error);
 
       res.status(500).json({
@@ -65,11 +81,15 @@ router.post(
   }
 );
 
+// ================= PDF SUMMARY =================
+
 router.post(
   "/pdf-summary",
   upload.single("pdf"),
   async (req, res) => {
+
     try {
+
       if (!req.file) {
         return res.status(400).json({
           error: "No PDF uploaded",
@@ -90,6 +110,7 @@ router.post(
       res.json({ summary });
 
     } catch (error) {
+
       console.log(error);
 
       res.status(500).json({
@@ -99,10 +120,14 @@ router.post(
   }
 );
 
+// ================= YOUTUBE SUMMARY =================
+
 router.post(
   "/youtube-summary",
   async (req, res) => {
+
     try {
+
       const { url } = req.body;
 
       if (!url) {
@@ -124,6 +149,7 @@ router.post(
       res.json({ summary });
 
     } catch (error) {
+
       console.log(error);
 
       res.status(500).json({
