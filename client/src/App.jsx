@@ -21,7 +21,7 @@ function App() {
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const backendUrl = "http://localhost:5000/api";
+ const backendUrl = "https://ai-content-summarizer-lsx8.onrender.com/api";
 
   const copySummary = () => {
     navigator.clipboard.writeText(summary);
